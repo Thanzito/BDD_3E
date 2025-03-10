@@ -1,0 +1,59 @@
+create database controle_estoque;
+use controle_estoque;
+--------
+create table categorias(
+ categoria_id int auto_increment primary key,
+ nome varchar(100) not null,
+ descricao text
+);
+create table fornecedores(
+ fornecedor_id int auto_increment primary key,
+ nome varchar(100) not null,
+ telefone varchar(100) not null,
+ email varchar(100) not null,
+ endereco text not null
+);
+create table produtos(
+ produto_id int auto_increment primary key,
+ nome varchar(100) not null,
+ descricao text,
+ preco decimal(10,2) not null,
+ quantidade_estoque int not null,
+ categoria_id int,
+ fornecedor_id int,
+ FOREIGN KEY(categoria_id) references categorias(categoria_id) on delete set null,
+ FOREIGN KEY(fornecedor_id) references fornecedores(fornecedor_id) on delete set null
+);
+create table entrada_estoque(
+ entrada_id int auto_increment primary key,
+ produto_id int not null,
+ quantidade int not null,
+ data_entrada datetime default current_timestamp,
+ fornecedor_id int,
+ FOREIGN key (produto_id) references produtos(produto_id) on delete cascade,
+ FOREIGN key (fornecedor_id) references fornecedores(fornecedor_id) on delete set null
+);
+create table saida_estoque(
+ saida_id int auto_increment primary key,
+ produto_id int not null,
+ quantidade int not null,
+ data_saida datetime default current_timestamp,
+ destino varchar(100) not null,
+  FOREIGN key (produto_id) references produtos(produto_id) on delete cascade
+);
+--------
+-- inserindo os dados
+INSERT INTO categorias(nome,descricao) values
+('Eletrônicos','Produtos Eletrônicos'),
+('Alimentos','Produtos Alimentícios');
+
+INSERT INTO fornecedores(nome,telefone,email,endereco) values
+('Nathan Cavalcante','41998813590','nathan.cavalcante@escola.pr.gov.br','Rua antonio moreira lopes 659'),
+('Eduardo bourgues','41997874069','dudubg@gmail.com','Rua doutor lopes ferreira 144'),
+('Rafael Camillo','41998800623','RafaCamill@gmail.com','Rua professor chapa camillo 269');
+
+INSERT INTO produtos(nome,preco,quantidade,categoria_id,fornecedor_id) values
+('TV','R$1999,99','1'),
+('Caixa de som','98,00','1'),
+('Melancia','R$17,99','1');
+
